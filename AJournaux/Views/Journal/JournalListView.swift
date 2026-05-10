@@ -4,6 +4,9 @@ import SwiftData
 struct JournalListView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel: JournalViewModel
+    
+    @State private var showProfileSheet = false
+    @State private var userProfile = UserProfile.shared
 
     init() {
         _viewModel = StateObject(wrappedValue: JournalViewModel.__placeholder())
@@ -20,7 +23,7 @@ struct JournalListView: View {
                 ScrollView(showsIndicators: false) {
                     LazyVStack(spacing: 32) {
                         ForEach(viewModel.pastMonths) { month in
-                            MonthCalendarView(month: month)
+                            MonthCalendarView(month: month, viewModel: viewModel)
                                 .id(month.id)
                                 .rotationEffect(.degrees(180))
                                 .onAppear {
@@ -39,37 +42,57 @@ struct JournalListView: View {
             .onAppear {
                 viewModel.updateContext(modelContext)
             }
+            .sheet(isPresented: $showProfileSheet) {
+                ProfileSheetView()
+            }
         }
     }
 
     var headerSection: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text("Your journal")
-                    .font(.largeTitle)
+                    .font(.title2)
                     .fontWeight(.bold)
 
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     Image(systemName: "sparkles")
                         .foregroundColor(.yellow)
-                    Text("\(viewModel.totalMoments)")
-                        .font(.subheadline)
+
+                    Text("\(viewModel.totalMoments) moments")
+                        .font(.footnote)
                         .fontWeight(.medium)
                 }
             }
+
             Spacer()
 
-            Image(systemName: "person.crop.circle.fill")
-                .resizable()
-                .frame(width: 48, height: 48)
-                .foregroundColor(.gray)
+            Button(action: { showProfileSheet = true }) {
+                if let photo = userProfile.profilePhoto {
+                    Image(uiImage: photo)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 40, height: 40)
+                        .clipShape(Circle())
+                } else {
+                    Image(systemName: "person.crop.circle.fill")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.gray)
+                }
+            }
         }
         .padding(.horizontal)
-        .padding(.top, 16)
+        .padding(.top, 10)
     }
 }
+
+// MARK: - MonthCalendarView
+
 struct MonthCalendarView: View {
     let month: MonthData
+    let viewModel: JournalViewModel
+
     let daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
 
@@ -100,6 +123,7 @@ struct MonthCalendarView: View {
             }
 
             LazyVGrid(columns: columns, spacing: 12) {
+                // offset ช่องว่างก่อนวันที่ 1
                 ForEach(0..<month.startOffset, id: \.self) { _ in
                     Color.clear.frame(height: 44)
                 }
@@ -110,19 +134,41 @@ struct MonthCalendarView: View {
                         && month.year == todayComponents.year
 
                     let firstPhoto = month.dayPhotos[day]
+                    let hasEntry = month.daysWithEntries.contains(day)
 
-                    DayCell(
-                        day: day,
-                        hasEntry: month.daysWithEntries.contains(day),
-                        isToday: isToday,
-                        firstPhoto: firstPhoto
-                    )
+                    if hasEntry {
+                        // กดได้เฉพาะวันที่มี entry
+                        NavigationLink(destination: destinationView(day: day)) {
+                            DayCell(
+                                day: day,
+                                hasEntry: hasEntry,
+                                isToday: isToday,
+                                firstPhoto: firstPhoto
+                            )
+                        }
+                        .buttonStyle(.plain) // ป้องกัน highlight สีฟ้าของ NavigationLink
+                    } else {
+                        DayCell(
+                            day: day,
+                            hasEntry: hasEntry,
+                            isToday: isToday,
+                            firstPhoto: firstPhoto
+                        )
+                    }
                 }
             }
         }
         .padding(.horizontal)
     }
+
+    @ViewBuilder
+    private func destinationView(day: Int) -> some View {
+        let entries = viewModel.fetchEntries(year: month.year, month: month.month, day: day)
+        EntryDetailView(entries: entries, startIndex: 0)
+    }
 }
+
+// MARK: - DayCell
 
 struct DayCell: View {
     let day: Int
@@ -165,6 +211,8 @@ struct DayCell: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)

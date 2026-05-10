@@ -82,7 +82,7 @@ class JournalViewModel: ObservableObject {
 
             let startOffset = calendar.component(.weekday, from: firstDayOfMonth) - 1
             let daysWithEntries = fetchDaysWithEntries(year: year, month: month, calendar: calendar)
-            let dayPhotos = fetchDayPhotos(year: year, month: month, calendar: calendar) // ✅ อยู่ใน class
+            let dayPhotos = fetchDayPhotos(year: year, month: month, calendar: calendar)
 
             newMonths.append(MonthData(
                 year: year,
@@ -102,7 +102,23 @@ class JournalViewModel: ObservableObject {
         }
     }
 
-    // ✅ อยู่ใน class — เข้าถึง modelContext ได้
+    // ดึง entries ของวันที่ระบุ (ใช้ใน JournalListView เพื่อส่งไป EntryDetailView)
+    func fetchEntries(year: Int, month: Int, day: Int) -> [JournalEntry] {
+        let calendar = Calendar.current
+        var startComps = DateComponents()
+        startComps.year = year
+        startComps.month = month
+        startComps.day = day
+        guard let startDate = calendar.date(from: startComps),
+              let endDate = calendar.date(byAdding: .day, value: 1, to: startDate) else { return [] }
+
+        let predicate = #Predicate<JournalEntry> { entry in
+            entry.date >= startDate && entry.date < endDate
+        }
+        let descriptor = FetchDescriptor<JournalEntry>(predicate: predicate)
+        return (try? modelContext.fetch(descriptor)) ?? []
+    }
+
     private func fetchDaysWithEntries(year: Int, month: Int, calendar: Calendar) -> [Int] {
         var startComps = DateComponents()
         startComps.year = year
@@ -119,7 +135,6 @@ class JournalViewModel: ObservableObject {
         return entries.map { calendar.component(.day, from: $0.date) }
     }
 
-    // ✅ อยู่ใน class — เข้าถึง modelContext ได้
     private func fetchDayPhotos(year: Int, month: Int, calendar: Calendar) -> [Int: UIImage] {
         var startComps = DateComponents()
         startComps.year = year

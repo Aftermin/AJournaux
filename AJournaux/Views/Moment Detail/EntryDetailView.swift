@@ -7,6 +7,7 @@ struct EntryDetailView: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var currentIndex: Int
+    @State private var showEditSheet = false
 
     init(entries: [JournalEntry], startIndex: Int = 0) {
         let sorted = entries.sorted { $0.date < $1.date }
@@ -15,10 +16,20 @@ struct EntryDetailView: View {
         _currentIndex = State(initialValue: startIndex)
     }
 
+    var currentEntry: JournalEntry? {
+        guard entries.indices.contains(currentIndex) else { return nil }
+        return entries[currentIndex]
+    }
+
+    // แสดงปุ่ม Edit เฉพาะ entry ที่เป็นของวันนี้
+    var isCurrentEntryToday: Bool {
+        guard let entry = currentEntry else { return false }
+        return Calendar.current.isDateInToday(entry.date)
+    }
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
-                // Background behind pages
                 Color(red: 0.91, green: 0.87, blue: 0.80)
                     .ignoresSafeArea()
 
@@ -26,7 +37,6 @@ struct EntryDetailView: View {
                     ForEach(Array(entries.enumerated()), id: \.offset) { index, entry in
                         BookPageView(entry: entry, pageNumber: index + 1, total: entries.count)
                             .tag(index)
-                            .padding(.top, 100)
                     }
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
@@ -59,6 +69,22 @@ struct EntryDetailView: View {
                         Image(systemName: "chevron.left")
                     }
                 }
+
+                // ปุ่ม Edit — แสดงเฉพาะ entry วันนี้
+                if isCurrentEntryToday {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showEditSheet = true
+                        } label: {
+                            Image(systemName: "pencil")
+                        }
+                    }
+                }
+            }
+            .sheet(isPresented: $showEditSheet) {
+                if let entry = currentEntry {
+                    WritingView(existingEntry: entry)
+                }
             }
         }
     }
@@ -70,7 +96,9 @@ struct BookPageView: View {
     let entry: JournalEntry
     let pageNumber: Int
     let total: Int
-    
+
+    @State private var photoOrder: [Int] = []
+
     static let fonts: [String] = ["Optima-Regular", "Georgia"]
 
     private let titleFont   = Font.custom(fonts[1], size: 18).italic()
@@ -94,11 +122,9 @@ struct BookPageView: View {
 
                     VStack(alignment: .center, spacing: 0) {
 
-                        // ── Top ornament ──────────────────────────────
                         OrnamentDivider()
                             .padding(.top, 50)
 
-                        // ── Date ─────────────────────────────────────
                         Text(formattedDate(entry.date))
                             .font(dateFont)
                             .tracking(2)
@@ -121,32 +147,45 @@ struct BookPageView: View {
 
                         if !entry.photos.isEmpty {
                             ZStack {
-                                ForEach(Array(entry.photos.prefix(3).enumerated()), id: \.offset) { index, photo in
+                                ForEach(photoOrder, id: \.self) { index in
+                                    let photo = entry.photos[index]
                                     if let image = UIImage(data: photo.imageData) {
+                                        let stackIndex = photoOrder.firstIndex(of: index) ?? 0
+
                                         Image(uiImage: image)
                                             .resizable()
                                             .scaledToFill()
                                             .frame(width: 110, height: 110)
                                             .clipShape(RoundedRectangle(cornerRadius: 3))
                                             .overlay(
-                                                // ขอบสีขาวสไตล์ polaroid
                                                 RoundedRectangle(cornerRadius: 3)
                                                     .stroke(Color.white, lineWidth: 6)
                                             )
                                             .shadow(color: .black.opacity(0.15), radius: 4, x: 1, y: 2)
-                                            // เอียงแต่ละรูปต่างกัน (ค่าคงที่ ไม่ random)
-                                            .rotationEffect(.degrees([-6, 2, -3][index % 3]))
-                                            .offset(x: [-12, 8, 0][index % 3],
-                                                    y: [4, -4, 0][index % 3])
-                                            .zIndex(Double(entry.photos.count - index))
+                                            .rotationEffect(.degrees([-6, 2, -3][stackIndex % 3]))
+                                            .offset(x: [-12, 8, 0][stackIndex % 3], y: [4, -4, 0][stackIndex % 3])
+                                            .zIndex(Double(photoOrder.count - stackIndex))
+                                            .scaleEffect(stackIndex == 0 ? 1 : 0.96)
+                                            .animation(.spring(response: 0.45, dampingFraction: 0.82), value: photoOrder)
+                                            .onTapGesture {
+                                                guard stackIndex == 0 else { return }
+                                                withAnimation {
+                                                    let first = photoOrder.removeFirst()
+                                                    photoOrder.append(first)
+                                                }
+                                            }
                                     }
                                 }
                             }
                             .frame(height: 130)
                             .padding(.top, 20)
+                            .onAppear {
+                                if photoOrder.isEmpty {
+                                    photoOrder = Array(entry.photos.indices)
+                                }
+                            }
                         }
 
-                        // ── Body text ─────────────────────────────────
                         Text(entry.content)
                             .font(bodyFont)
                             .foregroundColor(inkColor)
@@ -156,8 +195,6 @@ struct BookPageView: View {
                             .padding(.top, 20)
 
                         Spacer(minLength: 48)
-
-                        // ── Bottom ornament + page number ─────────────
                         OrnamentDivider()
 
                         Text("\(pageNumber)  /  \(total)")
@@ -169,6 +206,7 @@ struct BookPageView: View {
                     }
                     .frame(maxWidth: .infinity)
                 }
+                .padding(.top, 108)
                 .frame(minHeight: geo.size.height - 160)
                 .padding(.horizontal, 24)
             }
@@ -214,8 +252,8 @@ struct OrnamentDivider: View {
     let container = try! ModelContainer(for: JournalEntry.self, JournalPhoto.self, configurations: config)
     let context = ModelContext(container)
 
-    let entry1 = JournalEntry(date: Date(), prompt: "One of the things you are proud to do today.", content: "Today, I'm proud of turning a simple idea into something real by working on my journal mockup.")
-    let entry2 = JournalEntry(date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, prompt: "What made you smile today?", content: "A warm cup of coffee and good music in the morning made everything feel right.")
+    let entry1 = JournalEntry(date: Date(), prompt: "One of the things you are proud to do today.", content: "Today, I'm proud of turning a simple idea into something real.")
+    let entry2 = JournalEntry(date: Calendar.current.date(byAdding: .day, value: -1, to: Date())!, prompt: "What made you smile today?", content: "A warm cup of coffee and good music.")
     context.insert(entry1)
     context.insert(entry2)
 

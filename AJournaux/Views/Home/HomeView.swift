@@ -4,7 +4,8 @@ import SwiftData
 struct HomeView: View {
     @Query private var entries: [JournalEntry]
     @State private var showWritingView = false
-
+    @State private var showProfileSheet = false
+    @State private var userProfile = UserProfile.shared
     var totalMoments: Int {
         entries.count
     }
@@ -17,6 +18,12 @@ struct HomeView: View {
         let calendar = Calendar.current
         return entries.contains { calendar.isDateInToday($0.date) }
     }
+
+    var todayEntries: [JournalEntry] {
+        let calendar = Calendar.current
+        return entries.filter { calendar.isDateInToday($0.date) }.sorted { $0.date < $1.date }
+    }
+
     private func entriesForYear(_ year: Int) -> [JournalEntry] {
         entries.filter {
             Calendar.current.component(.year, from: $0.date) == year
@@ -47,23 +54,29 @@ struct HomeView: View {
 
                     Spacer()
 
-                    Image(systemName: "person.crop.circle.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 40, height: 40)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
+                    // แก้ตรงนี้ — กดได้เพื่อเปิด ProfileSheet
+                    Button(action: { showProfileSheet = true }) {
+                        if let photo = userProfile.profilePhoto {
+                            Image(uiImage: photo)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 40)
+                                .clipShape(Circle())
+                        } else {
+                            Image(systemName: "person.crop.circle.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.gray)
+                        }
+                    }
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 20)
 
-                Button(action: {
-                    if !hasWrittenToday {
-                        showWritingView = true
-                    }
-                }) {
-                    VStack(spacing: 16) {
-                        if hasWrittenToday {
+                if hasWrittenToday {
+                    NavigationLink(destination: EntryDetailView(entries: todayEntries, startIndex: 0)) {
+                        VStack(spacing: 16) {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 36))
                                 .foregroundColor(.white.opacity(0.9))
@@ -75,10 +88,22 @@ struct HomeView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
 
-                            Text("Come back tomorrow for a new prompt")
+                            Text("Tap to read today's entry")
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.7))
-                        } else {
+                        }
+                        .frame(maxWidth: .infinity, minHeight: 180)
+                        .background(Color(red: 0.2, green: 0.5, blue: 0.3))
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 20)
+                } else {
+                    Button(action: {
+                        showWritingView = true
+                    }) {
+                        VStack(spacing: 16) {
                             Text(JournalPrompts.current)
                                 .font(.title3)
                                 .fontWeight(.bold)
@@ -90,18 +115,14 @@ struct HomeView: View {
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.8))
                         }
+                        .frame(maxWidth: .infinity, minHeight: 180)
+                        .background(Color(red: 0.6, green: 0.2, blue: 0.2))
+                        .cornerRadius(16)
+                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                     }
-                    .frame(maxWidth: .infinity, minHeight: 180)
-                    .background(
-                        hasWrittenToday
-                            ? Color(red: 0.2, green: 0.5, blue: 0.3)
-                            : Color(red: 0.6, green: 0.2, blue: 0.2)
-                    )
-                    .cornerRadius(16)
-                    .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
-                .disabled(hasWrittenToday)
+
                 if entries.isEmpty {
                     VStack(spacing: 12) {
                         Image(systemName: "book.closed")
@@ -141,8 +162,13 @@ struct HomeView: View {
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             }
+            // เพิ่ม sheet นี้
+            .sheet(isPresented: $showProfileSheet) {
+                ProfileSheetView()
+            }
         }
     }
+
     private var availableYears: [Int] {
         let years = entries.map { Calendar.current.component(.year, from: $0.date) }
         return Array(Set(years)).sorted(by: >)
@@ -155,6 +181,8 @@ struct HomeView: View {
     }
 }
 
+// MARK: - BookCoverView
+
 struct BookCoverView: View {
     let year: String
     let entryCount: Int
@@ -162,7 +190,6 @@ struct BookCoverView: View {
     var body: some View {
         VStack(spacing: 12) {
             ZStack {
-                // --- ปกหนังสือรูป cover1 ---
                 Image("cover1")
                     .resizable()
                     .scaledToFill()
@@ -171,14 +198,12 @@ struct BookCoverView: View {
                     .cornerRadius(4)
                     .shadow(color: .black.opacity(0.2), radius: 3, x: 2, y: 2)
 
-                // --- spine เงาซ้าย ---
                 Rectangle()
                     .fill(Color.black.opacity(0.15))
                     .frame(width: 8, height: 130)
                     .cornerRadius(4)
                     .frame(width: 100, height: 130, alignment: .leading)
 
-                // --- entry count overlay ---
                 VStack(spacing: 4) {
                     Text("\(entryCount)")
                         .font(.system(size: 28, weight: .bold))
@@ -197,6 +222,8 @@ struct BookCoverView: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview("Home") {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
