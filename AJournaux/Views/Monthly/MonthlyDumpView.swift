@@ -229,7 +229,7 @@ struct MonthlyDumpView: View {
 
                 HStack(spacing: 4) {
                     Image(systemName: "sparkles")
-                        .foregroundColor(.yellow)
+                        .foregroundColor(Color(red: 0.55, green: 0.05, blue: 0.05))
                     Text("\(currentMonthEntries.count) moments for this month")
                         .font(.footnote)
                         .fontWeight(.medium)

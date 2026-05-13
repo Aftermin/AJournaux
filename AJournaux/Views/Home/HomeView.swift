@@ -1,6 +1,8 @@
 import SwiftUI
 import SwiftData
 
+import WidgetKit
+
 struct HomeView: View {
     @Query private var entries: [JournalEntry]
     @State private var showWritingView = false
@@ -36,7 +38,7 @@ struct HomeView: View {
                 HStack {
                     HStack(spacing: 8) {
                         Image(systemName: "sparkles")
-                            .foregroundColor(.yellow)
+                            .foregroundColor(Color(red: 0.55, green: 0.05, blue: 0.05))
                             .font(.system(size: 20))
                         Text("\(totalMoments)")
                             .font(.headline)
@@ -45,8 +47,8 @@ struct HomeView: View {
                     Spacer()
 
                     HStack(spacing: 8) {
-                        Image(systemName: "calendar")
-                            .foregroundColor(.red)
+                        Image(systemName: "hourglass")
+                            .foregroundColor(Color(red: 0.55, green: 0.05, blue: 0.05))
                             .font(.system(size: 20))
                         Text("\(daysPassed)/365")
                             .font(.headline)
@@ -157,17 +159,24 @@ struct HomeView: View {
 
                 Spacer()
             }
+            .onAppear { syncWidgetData() }
+            .onChange(of: entries.count) { _, _ in
+                syncWidgetData()
+            }
             .sheet(isPresented: $showWritingView) {
                 WritingView()
                     .presentationDetents([.large])
                     .presentationDragIndicator(.visible)
             }
-            // เพิ่ม sheet นี้
             .sheet(isPresented: $showProfileSheet) {
                 ProfileSheetView()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .openWritingView)) { _ in
+            showWritingView = true
+        }
     }
+    
 
     private var availableYears: [Int] {
         let years = entries.map { Calendar.current.component(.year, from: $0.date) }
@@ -178,6 +187,17 @@ struct HomeView: View {
         entries.filter {
             Calendar.current.component(.year, from: $0.date) == year
         }.count
+    }
+    
+    private func syncWidgetData() {
+        let data = JournalWidgetData(
+            totalMoments: totalMoments,
+            daysPassed: daysPassed,
+            hasWrittenToday: hasWrittenToday,
+            todayPrompt: JournalPrompts.current
+        )
+        JournalDataStore.save(data)
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }
 

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UIKit
 
 struct EntryDetailView: View {
     let entries: [JournalEntry]
@@ -70,7 +71,6 @@ struct EntryDetailView: View {
                     }
                 }
 
-                // ปุ่ม Edit — แสดงเฉพาะ entry วันนี้
                 if isCurrentEntryToday {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Button {
@@ -169,6 +169,7 @@ struct BookPageView: View {
                                             .animation(.spring(response: 0.45, dampingFraction: 0.82), value: photoOrder)
                                             .onTapGesture {
                                                 guard stackIndex == 0 else { return }
+                                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                                                 withAnimation {
                                                     let first = photoOrder.removeFirst()
                                                     photoOrder.append(first)

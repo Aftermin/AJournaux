@@ -6,8 +6,42 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		27F8C6D72FB1D5C700284EEB /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F8C6D62FB1D5C700284EEB /* WidgetKit.framework */; };
+		27F8C6D92FB1D5C700284EEB /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27F8C6D82FB1D5C700284EEB /* SwiftUI.framework */; };
+		27F8C6E82FB1D5C900284EEB /* AJournauxWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27F8C6D42FB1D5C700284EEB /* AJournauxWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		27F8C6E62FB1D5C900284EEB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 27997EAE2F9BCCEB00493133 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 27F8C6D32FB1D5C700284EEB;
+			remoteInfo = AJournauxWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		27F8C6ED2FB1D5C900284EEB /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				27F8C6E82FB1D5C900284EEB /* AJournauxWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		27997EB62F9BCCEB00493133 /* AJournaux.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AJournaux.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27F8C6D42FB1D5C700284EEB /* AJournauxWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AJournauxWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		27F8C6D62FB1D5C700284EEB /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		27F8C6D82FB1D5C700284EEB /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		27F8C6EF2FB1D68700284EEB /* AJournauxWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AJournauxWidgetExtension.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -18,6 +52,27 @@
 			);
 			target = 27997EB52F9BCCEB00493133 /* AJournaux */;
 		};
+		27F8C6EC2FB1D5C900284EEB /* Exceptions for "AJournauxWidget" folder in "AJournauxWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 27F8C6D32FB1D5C700284EEB /* AJournauxWidgetExtension */;
+		};
+		27F8C6F62FB1D7BC00284EEB /* Exceptions for "Shared" folder in "AJournauxWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				JournalWidgetData.swift,
+			);
+			target = 27F8C6D32FB1D5C700284EEB /* AJournauxWidgetExtension */;
+		};
+		27F8C6F82FB1D96400284EEB /* Exceptions for "AJournaux" folder in "AJournauxWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Views/Home/JournalPrompts.swift,
+			);
+			target = 27F8C6D32FB1D5C700284EEB /* AJournauxWidgetExtension */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -25,8 +80,25 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				2784D3B72F9BF17900B34B57 /* Exceptions for "AJournaux" folder in "AJournaux" target */,
+				27F8C6F82FB1D96400284EEB /* Exceptions for "AJournaux" folder in "AJournauxWidgetExtension" target */,
 			);
 			path = AJournaux;
+			sourceTree = "<group>";
+		};
+		27F8C6DA2FB1D5C700284EEB /* AJournauxWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				27F8C6EC2FB1D5C900284EEB /* Exceptions for "AJournauxWidget" folder in "AJournauxWidgetExtension" target */,
+			);
+			path = AJournauxWidget;
+			sourceTree = "<group>";
+		};
+		27F8C6F02FB1D7A500284EEB /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				27F8C6F62FB1D7BC00284EEB /* Exceptions for "Shared" folder in "AJournauxWidgetExtension" target */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -39,13 +111,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		27F8C6D12FB1D5C700284EEB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				27F8C6D92FB1D5C700284EEB /* SwiftUI.framework in Frameworks */,
+				27F8C6D72FB1D5C700284EEB /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		27997EAD2F9BCCEB00493133 = {
 			isa = PBXGroup;
 			children = (
+				27F8C6F02FB1D7A500284EEB /* Shared */,
+				27F8C6EF2FB1D68700284EEB /* AJournauxWidgetExtension.entitlements */,
 				27997EB82F9BCCEB00493133 /* AJournaux */,
+				27F8C6DA2FB1D5C700284EEB /* AJournauxWidget */,
+				27F8C6D52FB1D5C700284EEB /* Frameworks */,
 				27997EB72F9BCCEB00493133 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,8 +139,18 @@
 			isa = PBXGroup;
 			children = (
 				27997EB62F9BCCEB00493133 /* AJournaux.app */,
+				27F8C6D42FB1D5C700284EEB /* AJournauxWidgetExtension.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		27F8C6D52FB1D5C700284EEB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				27F8C6D62FB1D5C700284EEB /* WidgetKit.framework */,
+				27F8C6D82FB1D5C700284EEB /* SwiftUI.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -68,13 +163,16 @@
 				27997EB22F9BCCEB00493133 /* Sources */,
 				27997EB32F9BCCEB00493133 /* Frameworks */,
 				27997EB42F9BCCEB00493133 /* Resources */,
+				27F8C6ED2FB1D5C900284EEB /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				27F8C6E72FB1D5C900284EEB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				27997EB82F9BCCEB00493133 /* AJournaux */,
+				27F8C6F02FB1D7A500284EEB /* Shared */,
 			);
 			name = AJournaux;
 			packageProductDependencies = (
@@ -82,6 +180,28 @@
 			productName = AJournaux;
 			productReference = 27997EB62F9BCCEB00493133 /* AJournaux.app */;
 			productType = "com.apple.product-type.application";
+		};
+		27F8C6D32FB1D5C700284EEB /* AJournauxWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27F8C6E92FB1D5C900284EEB /* Build configuration list for PBXNativeTarget "AJournauxWidgetExtension" */;
+			buildPhases = (
+				27F8C6D02FB1D5C700284EEB /* Sources */,
+				27F8C6D12FB1D5C700284EEB /* Frameworks */,
+				27F8C6D22FB1D5C700284EEB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				27F8C6DA2FB1D5C700284EEB /* AJournauxWidget */,
+			);
+			name = AJournauxWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = AJournauxWidgetExtension;
+			productReference = 27F8C6D42FB1D5C700284EEB /* AJournauxWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -94,6 +214,9 @@
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					27997EB52F9BCCEB00493133 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					27F8C6D32FB1D5C700284EEB = {
 						CreatedOnToolsVersion = 26.2;
 					};
 				};
@@ -113,12 +236,20 @@
 			projectRoot = "";
 			targets = (
 				27997EB52F9BCCEB00493133 /* AJournaux */,
+				27F8C6D32FB1D5C700284EEB /* AJournauxWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		27997EB42F9BCCEB00493133 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		27F8C6D22FB1D5C700284EEB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +266,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		27F8C6D02FB1D5C700284EEB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27F8C6E72FB1D5C900284EEB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 27F8C6D32FB1D5C700284EEB /* AJournauxWidgetExtension */;
+			targetProxy = 27F8C6E62FB1D5C900284EEB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		27997EBF2F9BCCEE00493133 /* Debug */ = {
@@ -262,6 +408,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AJournaux/AJournaux.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65V5BND6J7;
@@ -302,6 +449,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AJournaux/AJournaux.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 65V5BND6J7;
@@ -337,6 +485,68 @@
 			};
 			name = Release;
 		};
+		27F8C6EA2FB1D5C900284EEB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = AJournauxWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65V5BND6J7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AJournauxWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AJournauxWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = amin.AJournaux.AJournauxWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		27F8C6EB2FB1D5C900284EEB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = AJournauxWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 65V5BND6J7;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AJournauxWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AJournauxWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = amin.AJournaux.AJournauxWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -354,6 +564,15 @@
 			buildConfigurations = (
 				27997EC22F9BCCEE00493133 /* Debug */,
 				27997EC32F9BCCEE00493133 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27F8C6E92FB1D5C900284EEB /* Build configuration list for PBXNativeTarget "AJournauxWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27F8C6EA2FB1D5C900284EEB /* Debug */,
+				27F8C6EB2FB1D5C900284EEB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
