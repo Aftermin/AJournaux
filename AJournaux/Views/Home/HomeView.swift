@@ -7,6 +7,7 @@ struct HomeView: View {
     @Query private var entries: [JournalEntry]
     @State private var showWritingView = false
     @State private var navigateToToday = false
+    @State private var navigateToCurrentYear = false
     @State private var showProfileSheet = false
     @State private var userProfile = UserProfile.shared
     var totalMoments: Int {
@@ -43,6 +44,16 @@ struct HomeView: View {
             ) { EmptyView() }
             .frame(height: 0)
             .hidden()
+            
+            NavigationLink(
+                destination: EntryDetailView(
+                    entries: entriesForYear(Calendar.current.component(.year, from: Date())),
+                    startIndex: 0
+                ),
+                isActive: $navigateToCurrentYear
+            ) { EmptyView() }
+            .frame(height: 0)
+            .hidden()
             VStack(spacing: 30) {
                 HStack {
                     HStack(spacing: 8) {
@@ -65,7 +76,6 @@ struct HomeView: View {
 
                     Spacer()
 
-                    // แก้ตรงนี้ — กดได้เพื่อเปิด ProfileSheet
                     Button(action: { showProfileSheet = true }) {
                         if let photo = userProfile.profilePhoto {
                             Image(uiImage: photo)
@@ -104,7 +114,7 @@ struct HomeView: View {
                                 .foregroundColor(.white.opacity(0.7))
                         }
                         .frame(maxWidth: .infinity, minHeight: 180)
-                        .background(Color(red: 0.2, green: 0.5, blue: 0.3))
+                        .background(Color(red: 0.0, green: 0.13, blue: 0.28))
                         .cornerRadius(16)
                         .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
                     }
@@ -146,8 +156,26 @@ struct HomeView: View {
                     }
                     .padding(.top, 10)
                 } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 40) {
+                    HStack() {
+                        RoundedRectangle(cornerRadius: 3)
+                            .fill(Color.bloodRed)
+                            .frame(width: 4, height: 36)
+                            .padding(.leading, 24)
+
+                        Text("MY JOURNAL SHELF \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(Color.bloodRed)
+                            .textCase(.uppercase)
+                            .tracking(1.2)
+                    }
+                    .padding(.top, 16)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVGrid(columns: [
+                            GridItem(.flexible()),
+                            GridItem(.flexible())
+                        ], spacing: 24) {
                             ForEach(availableYears, id: \.self) { year in
                                 NavigationLink(destination: EntryDetailView(
                                     entries: entriesForYear(year),
@@ -189,6 +217,8 @@ struct HomeView: View {
                 showWritingView = true
             } else if url.host == "today" {
                 navigateToToday = true
+            } else if url.host == "shelf" {
+                navigateToCurrentYear = true
             }
         }
     }
@@ -222,11 +252,12 @@ struct HomeView: View {
 struct BookCoverView: View {
     let year: String
     let entryCount: Int
+    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     var body: some View {
         VStack(spacing: 12) {
             ZStack {
-                Image("cover1")
+                Image("cover2")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 100, height: 130)

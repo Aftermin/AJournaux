@@ -26,9 +26,17 @@ struct JournalProvider: TimelineProvider {
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<JournalEntry>) -> Void) {
         let data = JournalDataStore.load()
-        let entry = JournalEntry(date: Date(), data: data)
+        let currentDate = Date()
         let midnight = Calendar.current.startOfDay(for: Date().addingTimeInterval(86400))
-        let timeline = Timeline(entries: [entry], policy: .after(midnight))
+        
+        var entries: [JournalEntry] = []
+        var entryDate = currentDate
+        while entryDate < midnight {
+            entries.append(JournalEntry(date: entryDate, data: data))
+            entryDate = Calendar.current.date(byAdding: .minute, value: 1, to: entryDate)!
+        }
+        
+        let timeline = Timeline(entries: entries, policy: .after(midnight))
         completion(timeline)
     }
 }

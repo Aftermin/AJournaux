@@ -12,6 +12,7 @@ import SwiftUI
 struct AJournauxWidgetBundle: WidgetBundle {
     var body: some Widget {
         PromptSingleWidget()
+        PromptPhotoSingleWidget()
         ArcDaysSingleWidget()
         DotGridDaysSingleWidget()
         MomentsSingleWidget()

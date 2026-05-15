@@ -12,17 +12,19 @@ struct MomentsWidget: View {
     let data: JournalWidgetData
 
     var body: some View {
-        VStack(spacing: 6) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 24))
-                .foregroundColor(Color(red: 0.55, green: 0.05, blue: 0.05))
-                .shadow(color: Color.bloodRed.opacity(0.4), radius: 6, x: 0, y: 3)
-            Text("\(data.totalMoments)")
-                .font(.system(size: 36, weight: .bold))
-            Text("MOMENTS")
-                .font(.caption)
-                .fontWeight(.bold)
-                .foregroundColor(.secondary)
+        Link(destination: URL(string: "journalapp://shelf")!) {
+            VStack(spacing: 6) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 24))
+                    .foregroundColor(Color(red: 0.55, green: 0.05, blue: 0.05))
+                    .shadow(color: Color(red: 0.55, green: 0.05, blue: 0.05).opacity(0.4), radius: 6, x: 0, y: 3)
+                Text("\(data.totalMoments)")
+                    .font(.system(size: 36, weight: .bold))
+                Text("MOMENTS")
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(.secondary)
+            }
         }
         .containerBackground(for: .widget) {
             Color(.systemBackground)
