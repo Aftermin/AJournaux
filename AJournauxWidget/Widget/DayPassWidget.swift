@@ -38,6 +38,7 @@ struct ArcDaysWidget: View {
                     )
                     .rotationEffect(.degrees(-90))
                     .padding(padding)
+                    .shadow(color: Color.bloodRed.opacity(0.4), radius: 6, x: 0, y: 3)
 
                 VStack(spacing: 2) {
                     Text(currentYear)

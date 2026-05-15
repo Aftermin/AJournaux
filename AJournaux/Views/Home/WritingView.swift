@@ -13,6 +13,7 @@ struct WritingView: View {
     @Environment(\.dismiss) private var dismiss
 
     var existingEntry: JournalEntry? = nil
+    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     @State private var momentText: String = ""
     @State private var selectedItems: [PhotosPickerItem] = []
@@ -71,7 +72,7 @@ struct WritingView: View {
                     .fill(Color.bloodRed)
                     .frame(width: 4, height: 36)
 
-                Text("Today's Reflection")
+                Text("Today's Reflection \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Color.bloodRed)
                     .textCase(.uppercase)
@@ -244,7 +245,7 @@ struct WritingView: View {
         }
     }
 
-    private func resizeImage(_ image: UIImage, targetBytes: Int = 1_000_000) -> Data? {
+    private func resizeImage(_ image: UIImage, targetBytes: Int = 100_000) -> Data? {
         let maxDimension: CGFloat = 1920
         let size = image.size
         var newSize = size
@@ -287,7 +288,7 @@ struct WritingView: View {
             entry.photos.forEach { modelContext.delete($0) }
             var photoModels: [JournalPhoto] = []
             for image in selectedImages {
-                if let imageData = resizeImage(image, targetBytes: 1_000_000) {
+                if let imageData = resizeImage(image, targetBytes: 100_000) {
                     photoModels.append(JournalPhoto(imageData: imageData))
                 }
             }
@@ -301,7 +302,7 @@ struct WritingView: View {
             )
             var photoModels: [JournalPhoto] = []
             for image in selectedImages {
-                if let imageData = resizeImage(image, targetBytes: 1_000_000) {
+                if let imageData = resizeImage(image, targetBytes: 100_000) {
                     photoModels.append(JournalPhoto(imageData: imageData))
                 }
             }

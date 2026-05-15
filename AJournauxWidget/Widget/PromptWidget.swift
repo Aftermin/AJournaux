@@ -10,9 +10,13 @@ import SwiftUI
 
 struct PromptMediumWidget: View {
     let data: JournalWidgetData
+    
+    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     var body: some View {
-        Link(destination: URL(string: "journalapp://write")!) {
+        Link(destination: URL(string: data.hasWrittenToday
+            ? "journalapp://today"
+            : "journalapp://write")!) {
             VStack(alignment: .leading, spacing: 0) {
                 // Header
                 HStack {
@@ -23,7 +27,7 @@ struct PromptMediumWidget: View {
                         .background(Color.bloodRed.opacity(0.08))
                         .cornerRadius(8)
 
-                    Text("AJournaux")
+                    Text("AJournaux \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(.bloodRed)
 
@@ -47,9 +51,6 @@ struct PromptMediumWidget: View {
                             Text("Moment captured!")
                                 .font(.system(size: 13, weight: .medium))
                         }
-                        Text("Tap to read today's entry")
-                            .font(.system(size: 10))
-                            .foregroundColor(.secondary)
                     }
                 } else {
                     Text("\"\(data.todayPrompt)\"")
@@ -61,7 +62,9 @@ struct PromptMediumWidget: View {
 
                 Spacer()
 
-                Text("tap to write today's moment →")
+                Text(data.hasWrittenToday
+                     ? "Tap to read today's entry \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →"
+                     : "Tap to make a moment for today \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
                     .font(.system(size: 10))
                     .foregroundColor(.secondary.opacity(0.5))
             }

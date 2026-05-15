@@ -16,6 +16,7 @@ struct MomentsWidget: View {
             Image(systemName: "sparkles")
                 .font(.system(size: 24))
                 .foregroundColor(Color(red: 0.55, green: 0.05, blue: 0.05))
+                .shadow(color: Color.bloodRed.opacity(0.4), radius: 6, x: 0, y: 3)
             Text("\(data.totalMoments)")
                 .font(.system(size: 36, weight: .bold))
             Text("MOMENTS")

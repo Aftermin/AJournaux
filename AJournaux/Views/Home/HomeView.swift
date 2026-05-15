@@ -6,6 +6,7 @@ import WidgetKit
 struct HomeView: View {
     @Query private var entries: [JournalEntry]
     @State private var showWritingView = false
+    @State private var navigateToToday = false
     @State private var showProfileSheet = false
     @State private var userProfile = UserProfile.shared
     var totalMoments: Int {
@@ -31,9 +32,17 @@ struct HomeView: View {
             Calendar.current.component(.year, from: $0.date) == year
         }.sorted { $0.date > $1.date }
     }
+    
+    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     var body: some View {
         NavigationStack {
+            NavigationLink(
+                destination: EntryDetailView(entries: todayEntries, startIndex: 0),
+                isActive: $navigateToToday
+            ) { EmptyView() }
+            .frame(height: 0)
+            .hidden()
             VStack(spacing: 30) {
                 HStack {
                     HStack(spacing: 8) {
@@ -90,7 +99,7 @@ struct HomeView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
 
-                            Text("Tap to read today's entry")
+                            Text("Tap to read today's entry \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.7))
                         }
@@ -113,7 +122,7 @@ struct HomeView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
 
-                            Text("Tap to make a moment for today")
+                            Text("Tap to make a moment for today \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.8))
                         }
@@ -174,6 +183,13 @@ struct HomeView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .openWritingView)) { _ in
             showWritingView = true
+        }
+        .onOpenURL { url in
+            if url.host == "write" {
+                showWritingView = true
+            } else if url.host == "today" {
+                navigateToToday = true
+            }
         }
     }
     
