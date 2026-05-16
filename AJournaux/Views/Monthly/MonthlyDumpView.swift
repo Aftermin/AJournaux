@@ -223,7 +223,7 @@ struct MonthlyDumpView: View {
     var headerSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Monthly dump")
+                Text("Monthly dump \(ShuffleEmoji.shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
                     .font(.title2)
                     .fontWeight(.bold)
 

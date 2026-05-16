@@ -51,3 +51,7 @@ class UserProfile {
             .appendingPathComponent("profile_photo.jpg")
     }
 }
+
+enum ShuffleEmoji {
+    static let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
+}

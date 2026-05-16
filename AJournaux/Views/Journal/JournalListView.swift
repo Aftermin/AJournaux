@@ -51,7 +51,7 @@ struct JournalListView: View {
     var headerSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Your journal")
+                Text("Your journal \(ShuffleEmoji.shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
                     .font(.title2)
                     .fontWeight(.bold)
 

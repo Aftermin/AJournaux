@@ -13,7 +13,6 @@ struct WritingView: View {
     @Environment(\.dismiss) private var dismiss
 
     var existingEntry: JournalEntry? = nil
-    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     @State private var momentText: String = ""
     @State private var selectedItems: [PhotosPickerItem] = []
@@ -72,7 +71,7 @@ struct WritingView: View {
                     .fill(Color.bloodRed)
                     .frame(width: 4, height: 36)
 
-                Text("Today's Reflection \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
+                Text("Today's Reflection \(ShuffleEmoji.shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(Color.bloodRed)
                     .textCase(.uppercase)

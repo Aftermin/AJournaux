@@ -33,7 +33,7 @@ struct JournalProvider: TimelineProvider {
         var entryDate = currentDate
         while entryDate < midnight {
             entries.append(JournalEntry(date: entryDate, data: data))
-            entryDate = Calendar.current.date(byAdding: .minute, value: 1, to: entryDate)!
+            entryDate = Calendar.current.date(byAdding: .minute, value: 60, to: entryDate)!
         }
         
         let timeline = Timeline(entries: entries, policy: .after(midnight))

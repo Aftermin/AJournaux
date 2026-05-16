@@ -33,8 +33,6 @@ struct HomeView: View {
             Calendar.current.component(.year, from: $0.date) == year
         }.sorted { $0.date > $1.date }
     }
-    
-    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     var body: some View {
         NavigationStack {
@@ -109,7 +107,7 @@ struct HomeView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
 
-                            Text("Tap to read today's entry \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
+                            Text("Tap to read today's entry \(ShuffleEmoji.shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.7))
                         }
@@ -132,7 +130,7 @@ struct HomeView: View {
                                 .multilineTextAlignment(.center)
                                 .padding(.horizontal)
 
-                            Text("Tap to make a moment for today \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
+                            Text("Tap to make a moment for today \(ShuffleEmoji.shuffleEmoji.randomElement() ?? "☘︎ ݁˖") →")
                                 .font(.subheadline)
                                 .foregroundColor(.white.opacity(0.8))
                         }
@@ -162,7 +160,7 @@ struct HomeView: View {
                             .frame(width: 4, height: 36)
                             .padding(.leading, 24)
 
-                        Text("MY JOURNAL SHELF \(shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
+                        Text("MY JOURNAL SHELF \(ShuffleEmoji.shuffleEmoji.randomElement() ?? "☘︎ ݁˖")")
                             .font(.system(size: 16, weight: .semibold))
                             .foregroundColor(Color.bloodRed)
                             .textCase(.uppercase)
@@ -252,12 +250,11 @@ struct HomeView: View {
 struct BookCoverView: View {
     let year: String
     let entryCount: Int
-    let shuffleEmoji: [String] = ["𓇢𓆸", "ᝰ.ᐟ", "☘︎ ݁˖", "࣪ ִֶָ☾.", "⋆𐙚₊", "˙✧˖°", "𖡼.𖤣𖥧𖡼.", "˚𓆝 ⋆"]
 
     var body: some View {
         VStack(spacing: 12) {
             ZStack {
-                Image("cover2")
+                Image("cover3")
                     .resizable()
                     .scaledToFill()
                     .frame(width: 100, height: 130)
